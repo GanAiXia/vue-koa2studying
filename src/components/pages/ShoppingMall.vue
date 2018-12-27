@@ -58,6 +58,22 @@
     <floor-component :floorData = "floor2" :floorTitle="floorName.floor2"></floor-component>
     <floor-component :floorData = "floor3" :floorTitle="floorName.floor3"></floor-component>
 
+    <!--Hot Area-->
+    <div class="hot-area">
+        <div class="hot-title">热卖商品</div>
+        <div class="hot-goods">
+          <!--这里需要一个list组件-->
+          <van-list>
+              <van-row gutter="20">
+                <van-col span="12" v-for="(item, index) in hotGoods" :key="index">
+                    <goods-info :goodsImage="item.image" :goodsName="item.name" :goodsPrice="item.price"></goods-info>
+                </van-col>
+              </van-row>
+          </van-list>
+        </div>
+    </div>
+
+
   </div>
 </template>
 
@@ -71,12 +87,15 @@
   // import swiperText from '../swiper/swiperText.vue'
   import floorComponent from '../component/floorComponent.vue'
   import { toMoney } from '@/filter/moneyFilter.js'
+  import goodsInfo from '../component/goodsInfoComponent'
+  import url from '@/serviceAPI.config.js'
 
   export default {
     components: {
       swiper,
       swiperSlide,
       floorComponent,
+      goodsInfo
       // swiperDefault,
       // swiperDefault2,
       // swiperDefault3,
@@ -95,12 +114,13 @@
         floor1: [],
         floor2: [],
         floor3: [],
-        floorName: {}
+        floorName: {},
+        hotGoods:[] //热卖商品
       }
     },
     created () {
       axios({
-        url: 'https://www.easy-mock.com/mock/5c23131504661a759e5d6a71/SmileVue/index',
+        url: url.getShoppingMallInfo,
         method: 'get'
       })
       .then(response=>{
@@ -114,6 +134,7 @@
           this.floor2 = response.data.data.floor2
           this.floor3 = response.data.data.floor3
           this.floorName = response.data.data.floorName
+          this.hotGoods = response.data.data.hotGoods
 
         }
       })
@@ -191,5 +212,10 @@
       font-size: 12px;
       text-align: center;
   }
-
+  .hot-area{
+      text-align: center;
+      font-size:14px;
+      height: 1.8rem;
+      line-height:1.8rem;
+  }
 </style>
